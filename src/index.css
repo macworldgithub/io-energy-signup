@@ -1,0 +1,152 @@
+body {
+  margin: 0;
+}
+
+@keyframes full-rotation {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-ping {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  position: relative;
+}
+.loader-ping::after,
+.loader-ping::before {
+  content: "";
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 3px solid #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: scale(0);
+  opacity: 0;
+  animation: animloader 2s linear infinite;
+}
+.loader-ping::after {
+  animation-delay: 1s;
+}
+
+.loader-ping.loader-light::after,
+.loader-ping.loader-light::before {
+  border: 3px solid #fff;
+}
+
+@keyframes animloader {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.fadein {
+  animation: fadein 0.5s ease-in-out;
+}
+
+.fadeslow {
+  animation-duration: 2.5s;
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.content-slider {
+  --widthGutters: calc(100vw - 1200px);
+  --widthGutter: calc(var(--widthGutters) / 2);
+  width: calc(var(--widthGutter) + 900px);
+  scrollbar-width: none;
+}
+.content-slider::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+.input-group {
+  position: relative;
+}
+
+@media (max-width: 720px) {
+  .input-group .input-group-button {
+    position: absolute;
+    right: -5px;
+    bottom: -3.2rem;
+    z-index: 10;
+  }
+}
+
+.article .kg-callout-card.kg-callout-card-grey {
+  background-color: #f7f7f8;
+}
+
+.article .kg-callout-card.kg-callout-card-white {
+  background-color: #ffffff;
+}
+
+.article .kg-callout-card.kg-callout-card-blue {
+  background-color: #eef7fe;
+}
+
+.article .kg-callout-card.kg-callout-card-green {
+  background-color: #effaee;
+}
+
+.article .kg-callout-card.kg-callout-card-yellow {
+  background-color: #fef8ec;
+}
+
+.article .kg-callout-card.kg-callout-card-red {
+  background-color: #fceaea;
+}
+
+.article .kg-callout-card.kg-callout-card-pink {
+  background-color: #fdecf3;
+}
+
+.article .kg-callout-card.kg-callout-card-purple {
+  background-color: #f2ecfe;
+}
+
+.article .kg-callout-card.kg-callout-card-accent {
+  background-color: #ea3c76;
+}
+
+.article .kg-image-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.article figure {
+  margin: 2rem auto;
+  padding: 0;
+}
+
+.article figure figcaption {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #718096;
+  margin-top: 0.5rem;
+}
+
+.article ol li {
+  padding-left: 0.7rem;
+}
+.article ol li::marker {
+  line-height: 3rem;
+}
