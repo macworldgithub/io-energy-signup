@@ -26,7 +26,7 @@ import ContactDetailsForm from "../property/ContactDetailsForm";
 import BusinessDetailsForm from "../property/BusinessDetailsForm";
 import BillingForm from "../property/BillingForm";
 import ConsentSection from "../shared/ConsentSection";
-
+import BaseBg from "../../assets/logos/Base.png";
 import { getSignupPlans } from "../../util/plans";
 import { submitSignup } from "../../util/caf";
 import {
@@ -182,13 +182,13 @@ export default function WebsiteSignupForm() {
     }
   };
 
-  const handleNext = (secondaryEmpty) => {
-    if (!stepComplete(activeStep, secondaryEmpty)) return;
-    setActiveStep((prev) => Math.min(stepLabels.length - 1, prev + 1));
-  };
+  // const handleNext = (secondaryEmpty) => {
+  //   if (!stepComplete(activeStep, secondaryEmpty)) return;
+  //   setActiveStep((prev) => Math.min(stepLabels.length - 1, prev + 1));
+  // };
 
-  const handleBack = () => {
-    setActiveStep((prev) => Math.max(0, prev - 1));
+  const handleNext = (secondaryEmpty) => {
+    setActiveStep(1);
   };
 
   const clearErrors = () => setValidationErrors([]);
@@ -409,199 +409,466 @@ export default function WebsiteSignupForm() {
     }
   };
 
+  // return (
+  //   <Stack spacing={4}>
+  //     <FormHeader
+  //       heading="Connection details"
+  //       subheading="Work through each step to complete your signup"
+  //     />
+  //     <Stepper activeStep={activeStep} alternativeLabel>
+  //       {stepLabels.map((label, index) => (
+  //         <Step
+  //           key={label}
+  //           completed={stepComplete(index, isSecondaryContactEmpty)}
+  //         >
+  //           <StepLabel>{label}</StepLabel>
+  //         </Step>
+  //       ))}
+  //     </Stepper>
+
+  //     {activeStep === 0 && (
+  //       <Stack spacing={3} divider={<Divider />}>
+  //         <Box>
+  //           <Typography variant="h6" sx={{ mb: 1 }}>
+  //             NMI lookup
+  //           </Typography>
+  //           <LocationForm
+  //             property={connection}
+  //             handleNmiPublicMatch={handleNmiPublicMatch}
+  //             handlePublicSelection={handlePublicSelection}
+  //             handleAddressChange={handleAddressChange}
+  //             onCancel={() => setLookupFailed(true)}
+  //           />
+  //         </Box>
+  //       </Stack>
+  //     )}
+
+  //     {activeStep === 1 && (
+  //       <Stack spacing={3} divider={<Divider />}>
+  //         <Box>
+  //           <Typography variant="h6" sx={{ mb: 1 }}>
+  //             Plan
+  //           </Typography>
+  //           {!connection.msats ? (
+  //             <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
+  //               {lookupFailed
+  //                 ? "We could not confirm your NMI online. Please contact us on 1300 313 463 to complete your signup."
+  //                 : "Enter your NMI to show available plans. If we can't match it, we'll ask you to contact us to finish the signup."}
+  //             </Typography>
+  //           ) : plansLoading ? (
+  //             <Stack
+  //               direction="row"
+  //               spacing={1}
+  //               alignItems="center"
+  //               sx={{ py: 1 }}
+  //             >
+  //               <CircularProgress size={18} />
+  //               <Typography variant="body2" color="text.secondary">
+  //                 Loading plans...
+  //               </Typography>
+  //             </Stack>
+  //           ) : eligiblePlans.length === 0 ? (
+  //             <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
+  //               We couldn't load plans for this NMI. Please contact us on 1300
+  //               313 463.
+  //             </Typography>
+  //           ) : (
+  //             <PlanForm
+  //               plan={connection.plan}
+  //               eligiblePlans={eligiblePlans}
+  //               msats={connection.msats}
+  //               handlePlanChange={handlePlanChange}
+  //             />
+  //           )}
+  //         </Box>
+  //       </Stack>
+  //     )}
+
+  //     {activeStep === 2 && (
+  //       <Stack spacing={3} divider={<Divider />}>
+  //         <FormHeader
+  //           heading="Property details"
+  //           subheading="Tell us when you are moving in and if any concessions or life support apply"
+  //         />
+  //         <MoveInForm
+  //           moveIn={{
+  //             flag: connection.moveInFlag,
+  //             date: connection.moveInDate,
+  //           }}
+  //           handleMoveInChange={handleMoveInChange}
+  //         />
+  //         <ConcessionCardForm
+  //           address={connection.address}
+  //           concessionCard={connection.concession}
+  //           handleConcessionCardChange={handleConcessionCardChange}
+  //         />
+  //         <LifeSupportForm
+  //           lifeSupport={{
+  //             flag: connection.lifeSupportFlag,
+  //             machineType: connection.lifeSupportMachineType,
+  //             notes: connection.lifeSupportNotes,
+  //           }}
+  //           handleLifeSupportChange={handleLifeSupportChange}
+  //         />
+  //       </Stack>
+  //     )}
+
+  //     {activeStep === 3 && (
+  //       <Stack spacing={3} divider={<Divider />}>
+  //         <FormHeader
+  //           heading="Contact details"
+  //           subheading="Who should we set up the account for?"
+  //         />
+  //         <ContactDetailsForm
+  //           idRequired={requireIdForPrimary}
+  //           details={connection.contactDetails}
+  //           contacts={[]}
+  //           excludeEmail={connection.secondaryContactDetails.email}
+  //           handleDetailsChange={handleContactDetailsChange}
+  //         />
+  //         {customerType === "BUSINESS" && (
+  //           <BusinessDetailsForm
+  //             details={{
+  //               business_name: connection.business_name,
+  //               abn_number: connection.abn_number,
+  //             }}
+  //             handleBusinessDetailsChange={handleBusinessDetailsChange}
+  //           />
+  //         )}
+  //       </Stack>
+  //     )}
+
+  //     {activeStep === 4 && (
+  //       <Stack spacing={3} divider={<Divider />}>
+  //         <FormHeader
+  //           heading="Payment & consent"
+  //           subheading="Choose how you pay and confirm the terms"
+  //         />
+
+  //         <Grid container spacing={2}>
+  //           <Grid item xs={12}>
+  //             <BillingForm
+  //               payment={connection.payment}
+  //               handleBillingChange={handleBillingChange}
+  //             />
+  //           </Grid>
+  //           <Grid item xs={12}>
+  //             <ConsentSection
+  //               onChange={(payload) => {
+  //                 handleConsentChange(payload);
+  //                 clearErrors();
+  //               }}
+  //             />
+  //           </Grid>
+  //         </Grid>
+  //       </Stack>
+  //     )}
+
+  //     {validationErrors.length > 0 && (
+  //       <Alert severity="error">
+  //         <Typography variant="subtitle2" sx={{ mb: 1 }}>
+  //           Please address the following:
+  //         </Typography>
+  //         <ul style={{ margin: 0, paddingInlineStart: "1.25rem" }}>
+  //           {validationErrors.map((msg, index) => (
+  //             <li key={index}>{msg}</li>
+  //           ))}
+  //         </ul>
+  //       </Alert>
+  //     )}
+
+  //     <Stack direction="row" justifyContent="space-between" spacing={2}>
+  //       <Button variant="text" disabled={activeStep === 0} onClick={handleBack}>
+  //         Back
+  //       </Button>
+  //       {activeStep < stepLabels.length - 1 ? (
+  //         <Button
+  //           variant="contained"
+  //           onClick={() => handleNext(isSecondaryContactEmpty)}
+  //           disabled={!stepComplete(activeStep, isSecondaryContactEmpty)}
+  //         >
+  //           Next
+  //         </Button>
+  //       ) : (
+  //         <LoadingButton
+  //           variant="contained"
+  //           color="primary"
+  //           loading={submitting}
+  //           onClick={handleSubmit}
+  //           disabled={!stepComplete(activeStep, isSecondaryContactEmpty)}
+  //         >
+  //           Submit signup
+  //         </LoadingButton>
+  //       )}
+  //     </Stack>
+  //   </Stack>
+  // );
   return (
-    <Stack spacing={4}>
-      <FormHeader
-        heading="Connection details"
-        subheading="Work through each step to complete your signup"
-      />
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {stepLabels.map((label, index) => (
-          <Step
-            key={label}
-            completed={stepComplete(index, isSecondaryContactEmpty)}
+    <Grid
+      container
+      sx={{
+        minHeight: { xs: "auto", md: "100vh", lg: "auto" },
+      }}
+    >
+      {/* LEFT – Hero / Branding / Steps */}
+      <Grid
+        item
+        xs={12}
+        md={4}
+        sx={{
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.65)), url(${BaseBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          color: "#fff",
+          p: { xs: 3, sm: 4, md: 5 },
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: { xs: "flex-start", md: "space-between" },
+          minHeight: { xs: "45vh", sm: "50vh", md: "auto" }, // ← limits height on mobile
+          gap: { xs: 3, md: 4 },
+        }}
+      >
+        <Box>
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{
+              fontWeight: 800,
+              letterSpacing: "-0.5px",
+              color: "#ff2d55",
+              mb: 1,
+            }}
           >
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
+            ioenergy
+          </Typography>
 
-      {activeStep === 0 && (
-        <Stack spacing={3} divider={<Divider />}>
-          <Box>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              NMI lookup
-            </Typography>
-            <LocationForm
-              property={connection}
-              handleNmiPublicMatch={handleNmiPublicMatch}
-              handlePublicSelection={handlePublicSelection}
-              handleAddressChange={handleAddressChange}
-              onCancel={() => setLookupFailed(true)}
-            />
-          </Box>
-        </Stack>
-      )}
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 700,
+              lineHeight: 1.1,
+              mb: 1.5,
+              fontSize: { xs: "1.9rem", sm: "2.4rem", md: "2.8rem" },
+            }}
+          >
+            Sign up with
+            <br />
+            io Energy.
+          </Typography>
 
-      {activeStep === 1 && (
-        <Stack spacing={3} divider={<Divider />}>
-          <Box>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              Plan
-            </Typography>
-            {!connection.msats ? (
-              <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
-                {lookupFailed
-                  ? "We could not confirm your NMI online. Please contact us on 1300 313 463 to complete your signup."
-                  : "Enter your NMI to show available plans. If we can't match it, we'll ask you to contact us to finish the signup."}
-              </Typography>
-            ) : plansLoading ? (
-              <Stack
-                direction="row"
-                spacing={1}
-                alignItems="center"
-                sx={{ py: 1 }}
-              >
-                <CircularProgress size={18} />
-                <Typography variant="body2" color="text.secondary">
-                  Loading plans...
-                </Typography>
-              </Stack>
-            ) : eligiblePlans.length === 0 ? (
-              <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
-                We couldn't load plans for this NMI. Please contact us on 1300
-                313 463.
-              </Typography>
-            ) : (
-              <PlanForm
-                plan={connection.plan}
-                eligiblePlans={eligiblePlans}
-                msats={connection.msats}
-                handlePlanChange={handlePlanChange}
+          <Typography
+            variant="body1"
+            sx={{
+              opacity: 0.9,
+              maxWidth: { xs: "420px", md: 280 },
+              fontSize: { xs: "1rem", md: "0.95rem" },
+            }}
+          >
+            Start with your NMI or address and choose your plan. We’ll gather
+            the details needed to create your account.
+          </Typography>
+        </Box>
+
+        {/* STEP INDICATOR */}
+        <Stack
+          spacing={1.5}
+          sx={{
+            display: { xs: "none", sm: "flex" }, // hide below ~600px if too crowded
+          }}
+        >
+          {stepLabels.map((label, index) => (
+            <Stack
+              key={label}
+              direction="row"
+              spacing={1.5}
+              alignItems="center"
+            >
+              <Box
+                sx={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: "50%",
+                  bgcolor:
+                    activeStep >= index ? "#ff2d55" : "rgba(255,255,255,0.35)",
+                  border: activeStep === index ? "2px solid #ff2d55" : "none",
+                  flexShrink: 0,
+                }}
               />
-            )}
-          </Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontWeight: activeStep === index ? 600 : 400,
+                  opacity: activeStep >= index ? 1 : 0.55,
+                  fontSize: { sm: "0.9rem", md: "0.95rem" },
+                }}
+              >
+                {label}
+              </Typography>
+            </Stack>
+          ))}
         </Stack>
-      )}
+      </Grid>
 
-      {activeStep === 2 && (
-        <Stack spacing={3} divider={<Divider />}>
-          <FormHeader
-            heading="Property details"
-            subheading="Tell us when you are moving in and if any concessions or life support apply"
-          />
-          <MoveInForm
-            moveIn={{
-              flag: connection.moveInFlag,
-              date: connection.moveInDate,
-            }}
-            handleMoveInChange={handleMoveInChange}
-          />
-          <ConcessionCardForm
-            address={connection.address}
-            concessionCard={connection.concession}
-            handleConcessionCardChange={handleConcessionCardChange}
-          />
-          <LifeSupportForm
-            lifeSupport={{
-              flag: connection.lifeSupportFlag,
-              machineType: connection.lifeSupportMachineType,
-              notes: connection.lifeSupportNotes,
-            }}
-            handleLifeSupportChange={handleLifeSupportChange}
-          />
-        </Stack>
-      )}
+      {/* RIGHT FORM PANEL */}
+      <Grid
+        item
+        xs={12}
+        md={8}
+        sx={{
+          backgroundColor: "#ffffff",
+          p: { xs: 2.5, sm: 4, md: 6, lg: 8 },
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* Header */}
+        <Box sx={{ mb: { xs: 3, md: 4 } }}>
+          <Typography variant="h5" fontWeight={700} gutterBottom>
+            Connection details
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Work through each step to complete your signup
+          </Typography>
+        </Box>
 
-      {activeStep === 3 && (
-        <Stack spacing={3} divider={<Divider />}>
-          <FormHeader
-            heading="Contact details"
-            subheading="Who should we set up the account for?"
-          />
-          <ContactDetailsForm
-            idRequired={requireIdForPrimary}
-            details={connection.contactDetails}
-            contacts={[]}
-            excludeEmail={connection.secondaryContactDetails.email}
-            handleDetailsChange={handleContactDetailsChange}
-          />
-          {customerType === "BUSINESS" && (
-            <BusinessDetailsForm
-              details={{
-                business_name: connection.business_name,
-                abn_number: connection.abn_number,
-              }}
-              handleBusinessDetailsChange={handleBusinessDetailsChange}
-            />
+        {/* STEP CONTENT */}
+        <Box sx={{ flex: 1 }}>
+          {activeStep === 0 && (
+            <Stack spacing={3.5}>
+              <Typography variant="h6" fontWeight={600}>
+                NMI lookup
+              </Typography>
+
+              <LocationForm
+                property={connection}
+                handleNmiPublicMatch={handleNmiPublicMatch}
+                handlePublicSelection={handlePublicSelection}
+                handleAddressChange={handleAddressChange}
+                onCancel={() => setLookupFailed(true)}
+              />
+            </Stack>
           )}
-        </Stack>
-      )}
 
-      {activeStep === 4 && (
-        <Stack spacing={3} divider={<Divider />}>
-          <FormHeader
-            heading="Payment & consent"
-            subheading="Choose how you pay and confirm the terms"
-          />
+          {activeStep === 1 && (
+            <Stack spacing={3}>
+              <Typography variant="h6">Plan</Typography>
+              {plansLoading ? (
+                <CircularProgress size={24} />
+              ) : (
+                <PlanForm
+                  plan={connection.plan}
+                  eligiblePlans={eligiblePlans}
+                  msats={connection.msats}
+                  handlePlanChange={handlePlanChange}
+                />
+              )}
+            </Stack>
+          )}
 
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
+          {activeStep === 2 && (
+            <Stack spacing={3}>
+              <MoveInForm
+                moveIn={{
+                  flag: connection.moveInFlag,
+                  date: connection.moveInDate,
+                }}
+                handleMoveInChange={handleMoveInChange}
+              />
+              <ConcessionCardForm
+                address={connection.address}
+                concessionCard={connection.concession}
+                handleConcessionCardChange={handleConcessionCardChange}
+              />
+              <LifeSupportForm
+                lifeSupport={{
+                  flag: connection.lifeSupportFlag,
+                  machineType: connection.lifeSupportMachineType,
+                  notes: connection.lifeSupportNotes,
+                }}
+                handleLifeSupportChange={handleLifeSupportChange}
+              />
+            </Stack>
+          )}
+
+          {activeStep === 3 && (
+            <Stack spacing={3}>
+              <ContactDetailsForm
+                idRequired={requireIdForPrimary}
+                details={connection.contactDetails}
+                excludeEmail={connection.secondaryContactDetails.email}
+                handleDetailsChange={handleContactDetailsChange}
+              />
+
+              {customerType === "BUSINESS" && (
+                <BusinessDetailsForm
+                  details={{
+                    business_name: connection.business_name,
+                    abn_number: connection.abn_number,
+                  }}
+                  handleBusinessDetailsChange={handleBusinessDetailsChange}
+                />
+              )}
+            </Stack>
+          )}
+
+          {activeStep === 4 && (
+            <Stack spacing={3}>
               <BillingForm
                 payment={connection.payment}
                 handleBillingChange={handleBillingChange}
               />
-            </Grid>
-            <Grid item xs={12}>
               <ConsentSection
                 onChange={(payload) => {
                   handleConsentChange(payload);
                   clearErrors();
                 }}
               />
-            </Grid>
-          </Grid>
+            </Stack>
+          )}
+        </Box>
+
+        {/* FOOTER BUTTONS */}
+        <Stack
+          direction="row"
+          justifyContent="flex-end"
+          alignItems="center"
+          sx={{
+            mt: "auto",
+            pt: { xs: 3, md: 4 },
+            pb: { xs: 2, md: 3 },
+          }}
+        >
+          {activeStep < stepLabels.length - 1 ? (
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={() => handleNext(isSecondaryContactEmpty)}
+              disabled={!stepComplete(activeStep, isSecondaryContactEmpty)}
+              sx={{
+                minWidth: 110,
+                bgcolor: "#ff2d55",
+                "&:hover": { bgcolor: "#e02548" },
+              }}
+            >
+              Next
+            </Button>
+          ) : (
+            <LoadingButton
+              variant="contained"
+              loading={submitting}
+              onClick={handleSubmit}
+              sx={{
+                minWidth: 140,
+                bgcolor: "#ff2d55",
+                "&:hover": { bgcolor: "#e02548" },
+              }}
+            >
+              Submit signup
+            </LoadingButton>
+          )}
         </Stack>
-      )}
-
-      {validationErrors.length > 0 && (
-        <Alert severity="error">
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
-            Please address the following:
-          </Typography>
-          <ul style={{ margin: 0, paddingInlineStart: "1.25rem" }}>
-            {validationErrors.map((msg, index) => (
-              <li key={index}>{msg}</li>
-            ))}
-          </ul>
-        </Alert>
-      )}
-
-      <Stack direction="row" justifyContent="space-between" spacing={2}>
-        <Button variant="text" disabled={activeStep === 0} onClick={handleBack}>
-          Back
-        </Button>
-        {activeStep < stepLabels.length - 1 ? (
-          <Button
-            variant="contained"
-            onClick={() => handleNext(isSecondaryContactEmpty)}
-            disabled={!stepComplete(activeStep, isSecondaryContactEmpty)}
-          >
-            Next
-          </Button>
-        ) : (
-          <LoadingButton
-            variant="contained"
-            color="primary"
-            loading={submitting}
-            onClick={handleSubmit}
-            disabled={!stepComplete(activeStep, isSecondaryContactEmpty)}
-          >
-            Submit signup
-          </LoadingButton>
-        )}
-      </Stack>
-    </Stack>
+      </Grid>
+    </Grid>
   );
 }
 
