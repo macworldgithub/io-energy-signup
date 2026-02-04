@@ -19,10 +19,15 @@ export default {
       styleOverrides: {
         root: ({ ownerState }) => ({
           textTransform: "none",
+          fontWeight: 600,
+          boxShadow: "none",
           ...((ownerState.variant === "contained" ||
             ownerState.variant === "outlined") && {
-            borderRadius: "9999px",
+            borderRadius: "8px",
           }),
+          "&:hover": {
+            boxShadow: "none",
+          },
         }),
       },
     },
@@ -34,7 +39,7 @@ export default {
   },
   typography: {
     fontFamily: [
-      "Montserrat",
+      "Outfit",
       "Helvetica Neue",
       "-apple-system",
       "Arial",

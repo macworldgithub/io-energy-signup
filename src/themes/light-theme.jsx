@@ -13,17 +13,20 @@ export default {
   palette: {
     mode: "light",
     text: {
-      primary: "#000",
+      primary: "#111827", // darker grey/black
+      secondary: "#6b7280", // lighter grey
       contrastText: "#FFF",
     },
     background: {
-      paper: "#FFFDF4",
+      paper: "#FFFFFF",
     },
     primary: {
-      main: "#181736",
+      // Dark blue for 'Find' buttons
+      main: "#0f172a",
     },
     secondary: {
-      main: "#FF127F",
+      // Pink for branding
+      main: "#ff2d55",
     },
     tertiary: {
       main: "#6964b4",
@@ -33,9 +36,9 @@ export default {
       contrastText: "#181736",
     },
     subtle: {
-      main: "#ccc",
-      light: "#F1F2F3",
-      dark: "#C5C8CC",
+      main: "#e2e8f0",
+      light: "#f8fafc",
+      dark: "#cbd5e1",
     },
   },
 };

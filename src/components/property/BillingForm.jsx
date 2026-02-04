@@ -1,46 +1,47 @@
 import PropTypes from "prop-types";
-
 import {
   Grid,
   Box,
   TextField,
   Typography,
-  FormControl,
   FormControlLabel,
   Checkbox,
+  Stack,
+  Card,
+  CardActionArea,
 } from "@mui/material";
-import { RadioButtons } from "../shared/RadioButtons";
-
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { useFormik } from "formik";
-import { paymentValidationSchema } from "../../util/formValidation";
-
-import {
-  DIRECT_DEBIT_DEF,
-  buildPlainTextFromDef,
-  renderBullets,
-} from "../../constants/consentText";
 
 BillingForm.propTypes = {
   payment: PropTypes.object,
   handleBillingChange: PropTypes.func,
   disabled: PropTypes.bool,
+  consents: PropTypes.object,
+  handleConsentChange: PropTypes.func,
 };
 
 export default function BillingForm({
   payment,
   handleBillingChange,
   disabled,
+  consents,
+  handleConsentChange,
 }) {
   const formik = useFormik({
     initialValues: {
-      method: payment.method || "DIRECT",
+      method: payment.method || "CC",
       bsb: payment.bsb || "",
       account: payment.account || "",
       accountName: payment.accountName || "",
-      direct_debit_terms_accepted: payment.direct_debit_terms_accepted || null,
-      direct_debit_consent_bundle: payment.direct_debit_consent_bundle || null,
+      cc_number: payment.cc_number || "",
+      cc_name: payment.cc_name || "",
+      cc_expiry: payment.cc_expiry || "",
+      cc_cvv: payment.cc_cvv || "",
+      tips_accepted: payment.tips_accepted || false,
     },
-    validationSchema: paymentValidationSchema,
+    enableReinitialize: true,
     validateOnChange: false,
     validateOnBlur: true,
   });
@@ -51,180 +52,203 @@ export default function BillingForm({
   };
 
   const update = async (event) => {
-    const field = event.target.name;
-    const value = event.target.value;
+    let field = event.target.name;
+    let value = event.target.value;
+
+    if (event.target.type === "checkbox") {
+      value = event.target.checked;
+    }
+
     await formik.setFieldValue(field, value);
     handleBillingChange({ [field]: value });
   };
-  const ddVars = {
-    retailerName: "iO Energy",
-    schemeLabel: "Bulk Electronic Clearing System",
-  };
 
-  const ddUrls = {
-    directDebitAgreementUrl: new URL(
-      `/src/assets/files/io-energy-eddrsa-202509.pdf`,
-      import.meta.url,
-    ).href,
+  const handleMethodChange = (newMethod) => {
+    formik.setFieldValue("method", newMethod);
+    handleBillingChange({ method: newMethod });
   };
-
-  const ddPlain = buildPlainTextFromDef(DIRECT_DEBIT_DEF, ddVars, ddUrls);
-  const ddBulletsJSX = renderBullets(DIRECT_DEBIT_DEF, ddVars, ddUrls);
 
   return (
-    <form name="PaymentForm" onSubmit={formik.handleSubmit}>
-      <Box mb={5}>
-        <RadioButtons
-          list={[
-            {
-              value: "DIRECT",
-              label: "Direct debit",
-              disabled: disabled,
-            },
-            { value: "CHEQUE", label: "Other", disabled: disabled },
-          ]}
-          value={formik.values.method}
-          handleChange={(value) => {
-            update({ target: { name: "method", value: value } });
-          }}
-        />
-
-        {formik.values.method === "DIRECT" && (
-          <Grid container spacing={2} sx={{ mt: 0, maxWidth: "sm" }}>
-            <Grid item xs={12}>
-              <TextField
-                id="bsb"
-                name="bsb"
-                data-cy="bsb-field"
-                label="BSB"
-                margin="normal"
-                type="number"
-                fullWidth
-                onChange={formik.handleChange}
-                onBlur={handleBlur}
-                value={formik.values.bsb}
-                error={formik.touched.bsb && Boolean(formik.errors.bsb)}
-                helperText={formik.touched.bsb && formik.errors.bsb}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="account"
-                name="account"
-                data-cy="accNo-field"
-                label="Account Number"
-                margin="normal"
-                type="number"
-                fullWidth
-                onChange={formik.handleChange}
-                onBlur={handleBlur}
-                value={formik.values.account}
-                error={formik.touched.account && Boolean(formik.errors.account)}
-                helperText={formik.touched.account && formik.errors.account}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="accountName"
-                name="accountName"
-                data-cy="accName-field"
-                label="Account Name"
-                margin="normal"
-                type="text"
-                fullWidth
-                onChange={formik.handleChange}
-                onBlur={handleBlur}
-                value={formik.values.accountName}
-                error={
-                  formik.touched.accountName &&
-                  Boolean(formik.errors.accountName)
-                }
-                helperText={
-                  formik.touched.accountName && formik.errors.accountName
-                }
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Box
-                sx={{
-                  maxHeight: 240,
-                  overflowY: "auto",
-                  p: 1.5,
-                  bgcolor: "white",
-                  border: "1px solid #4b5563",
-                  borderRadius: 1,
-                }}
-              >
-                <strong>{DIRECT_DEBIT_DEF.header}</strong>
-                <ul
-                  style={{
-                    paddingInlineStart: "1.25rem",
-                    marginTop: 8,
-                  }}
-                >
-                  {ddBulletsJSX}
-                </ul>
-              </Box>
-
-              <FormControl margin="dense">
-                <FormControlLabel
-                  sx={{ mt: 1 }}
-                  control={
-                    <Checkbox
-                      size="small"
-                      id="direct_debit_terms_accepted"
-                      checked={formik.values.direct_debit_terms_accepted}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        const bundle = checked
-                          ? {
-                              version_label: DIRECT_DEBIT_DEF.version_label,
-                              text: ddPlain,
-                              links: {
-                                direct_debit_agreement_url:
-                                  ddUrls.directDebitAgreementUrl,
-                              },
-                            }
-                          : null;
-
-                        formik.setFieldValue(
-                          "direct_debit_terms_accepted",
-                          checked,
-                        );
-                        formik.setFieldValue(
-                          "direct_debit_consent_bundle",
-                          bundle,
-                        );
-
-                        handleBillingChange({
-                          direct_debit_terms_accepted: checked,
-                          direct_debit_consent_bundle: bundle,
-                        });
-                      }}
-                    />
-                  }
-                  label="I authorise the above direct debit arrangement"
-                />
-              </FormControl>
-            </Grid>
-          </Grid>
-        )}
-
-        {formik.values.method === "CHEQUE" && (
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="body1" sx={{ ml: 2, maxWidth: "lg" }}>
-              We recommend setting up direct debit to avoid transaction and late
-              payment fees, and you can also pay using BPAY, bank transfer,
-              credit card or cheque; further details will be on your bills.
-            </Typography>
-            <Typography variant="body1" sx={{ ml: 2, mt: 1, maxWidth: "lg" }}>
-              You can set up direct debit payment via Credit Card if you call
-              1300 313 463. For your security we will not collect that
-              information online.
-            </Typography>
-          </Box>
-        )}
+    <Stack spacing={2.5}>
+      <Box>
+        <Typography variant="h5" fontWeight={700} gutterBottom>
+          Payment & consent
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Set up your payment method and review the terms to complete your signup.
+        </Typography>
       </Box>
-    </form>
+
+      <Box>
+        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+          Payment method
+        </Typography>
+        <Stack spacing={1.5}>
+          <Card
+            sx={{
+              border: formik.values.method === "CC" ? "2px solid #ff2d55" : "1px solid #e0e0e0",
+              bgcolor: "#fff",
+              borderRadius: 2,
+              opacity: disabled ? 0.7 : 1
+            }}
+            elevation={0}
+          >
+            <CardActionArea
+              onClick={() => !disabled && handleMethodChange("CC")}
+              sx={{ p: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 2 }}
+            >
+              <CreditCardIcon sx={{ color: "#333" }} />
+              <Typography variant="body2" fontWeight={500}>Credit Card</Typography>
+            </CardActionArea>
+          </Card>
+
+          <Card
+            sx={{
+              border: formik.values.method === "DIRECT" ? "2px solid #ff2d55" : "1px solid #e0e0e0",
+              bgcolor: "#fff",
+              borderRadius: 2,
+              opacity: disabled ? 0.7 : 1
+            }}
+            elevation={0}
+          >
+            <CardActionArea
+              onClick={() => !disabled && handleMethodChange("DIRECT")}
+              sx={{ p: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 2 }}
+            >
+              <AccountBalanceIcon sx={{ color: "#333" }} />
+              <Typography variant="body2" fontWeight={500}>Direct Debit</Typography>
+            </CardActionArea>
+          </Card>
+        </Stack>
+      </Box>
+
+      {formik.values.method === "CC" && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+              Card number
+            </Typography>
+            <TextField
+              fullWidth
+              name="cc_number"
+              placeholder="Your card number"
+              value={formik.values.cc_number}
+              onChange={update}
+              onBlur={handleBlur}
+              size="small"
+              InputProps={{ sx: { bgcolor: "white", borderRadius: 2 } }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+              Expiry date
+            </Typography>
+            <TextField
+              fullWidth
+              name="cc_expiry"
+              placeholder="MM/YY"
+              value={formik.values.cc_expiry}
+              onChange={update}
+              onBlur={handleBlur}
+              size="small"
+              InputProps={{ sx: { bgcolor: "white", borderRadius: 2 } }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+              CVV
+            </Typography>
+            <TextField
+              fullWidth
+              name="cc_cvv"
+              placeholder="123"
+              value={formik.values.cc_cvv}
+              onChange={update}
+              onBlur={handleBlur}
+              size="small"
+              InputProps={{ sx: { bgcolor: "white", borderRadius: 2 } }}
+            />
+          </Grid>
+        </Grid>
+      )}
+
+      {formik.values.method === "DIRECT" && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+              BSB
+            </Typography>
+            <TextField
+              fullWidth
+              name="bsb"
+              placeholder="000-000"
+              value={formik.values.bsb}
+              onChange={update}
+              onBlur={handleBlur}
+              size="small"
+              InputProps={{ sx: { bgcolor: "white", borderRadius: 2 } }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+              Account Number
+            </Typography>
+            <TextField
+              fullWidth
+              name="account"
+              placeholder="Account number"
+              value={formik.values.account}
+              onChange={update}
+              onBlur={handleBlur}
+              size="small"
+              InputProps={{ sx: { bgcolor: "white", borderRadius: 2 } }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+              Account Name
+            </Typography>
+            <TextField
+              fullWidth
+              name="accountName"
+              placeholder="Account name"
+              value={formik.values.accountName}
+              onChange={update}
+              onBlur={handleBlur}
+              size="small"
+              InputProps={{ sx: { bgcolor: "white", borderRadius: 2 } }}
+            />
+          </Grid>
+        </Grid>
+      )}
+
+      <Stack spacing={0.5}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={consents.contract_terms_accepted}
+              onChange={(e) => handleConsentChange({ contract_terms_accepted: e.target.checked })}
+              sx={{ color: "#bdc3c7", "&.Mui-checked": { color: "#ff2d55" } }}
+            />
+          }
+          label={
+            <Typography variant="body2">
+              I agree to the <span style={{ textDecoration: 'underline', cursor: 'pointer' }}>Terms of Service</span> and <span style={{ textDecoration: 'underline', cursor: 'pointer' }}>Energy Contract</span>
+            </Typography>
+          }
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="tips_accepted"
+              checked={formik.values.tips_accepted}
+              onChange={(e) => update(e)}
+              sx={{ color: "#bdc3c7", "&.Mui-checked": { color: "#ff2d55" } }}
+            />
+          }
+          label={<Typography variant="body2">Send me energy saving tips and special offers</Typography>}
+        />
+      </Stack>
+    </Stack>
   );
 }

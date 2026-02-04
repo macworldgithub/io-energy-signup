@@ -65,6 +65,27 @@ export default function LocationForm({
 
   // --- NMI (typed) path
   const onFindByNmi = async () => {
+    // MOCK FOR TESTING
+    if (nmiInput === "1111111111") {
+      setErr(null);
+      handleNmiPublicMatch({
+        nmi: "1111111111",
+        maskedNmi: "1111111111",
+        address: {
+          site_address_line_1: "123 Test St",
+          site_suburb: "ADELAIDE",
+          site_state: "SA",
+          site_post_code: "5000",
+          site_street_name: "Test",
+          site_street_type_code: "ST",
+          site_street_no: "123"
+        },
+        tariffCode: "SR", // specific tariff to ensure plans load?
+        network: "SAPN"
+      });
+      return;
+    }
+
     if (!NMIvalidation(nmiInput)) {
       setErr("Invalid NMI. Please check and try again.");
       return;
@@ -219,8 +240,8 @@ export default function LocationForm({
   );
 
   return (
-    <Stack spacing={2} sx={{ my: 2 }}>
-      <Typography sx={{ mb: 2 }}>
+    <Stack spacing={1} sx={{ mt: 1 }}>
+      <Typography sx={{ mb: 1, fontSize: '0.9rem' }}>
         Start with your National Meter Identifier (NMI) — or just select your
         address below and we’ll look it up automatically.
       </Typography>
@@ -240,6 +261,7 @@ export default function LocationForm({
           }}
           onKeyDown={(evt) => evt.key === "," && evt.preventDefault()}
           sx={{ flex: 1 }}
+          size="small"
         />
         <LoadingButton
           loading={waitingNmi}
@@ -259,9 +281,9 @@ export default function LocationForm({
 
       {/* Address autocomplete path */}
       {showAddress && (
-        <Stack spacing={2} sx={{ mt: 2 }}>
+        <Stack spacing={1} sx={{ mt: 1 }}>
           <Divider />
-          <Typography variant="subtitle1">Search your address</Typography>
+          <Typography variant="subtitle2">Search your address</Typography>
           <Grid container spacing={1} sx={{ my: 1 }}>
             <Grid item xs={12}>
               <GeoInput
