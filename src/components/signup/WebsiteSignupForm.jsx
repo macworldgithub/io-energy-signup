@@ -85,8 +85,8 @@ export default function WebsiteSignupForm() {
     moveInFlag: "",
     moveInDate: null,
     property_type: "", // New
-    residents: "",     // New
-    solar: false,      // New
+    residents: "", // New
+    solar: false, // New
     concession: { flag: "" },
     lifeSupportFlag: "",
     lifeSupportMachineType: "",
@@ -101,10 +101,10 @@ export default function WebsiteSignupForm() {
       dd_bsb: "",
       dd_acc_no: "",
       dd_acc_name: "",
-      cc_number: "",    // New (UI only?)
-      cc_name: "",      // New
-      cc_expiry: "",    // New
-      cc_cvv: "",       // New
+      cc_number: "", // New (UI only?)
+      cc_name: "", // New
+      cc_expiry: "", // New
+      cc_cvv: "", // New
       direct_debit_terms_accepted: false,
       direct_debit_consent_bundle: null,
     },
@@ -133,7 +133,9 @@ export default function WebsiteSignupForm() {
     "Payment & consent",
   ];
 
-  const isConnectionComplete = () => !!connection.msats || (!!connection.address && !!connection.address.site_post_code);
+  const isConnectionComplete = () =>
+    !!connection.msats ||
+    (!!connection.address && !!connection.address.site_post_code);
   const isPlanComplete = () => !!connection.plan;
   const isPropertyComplete = () =>
     moveInValidationSchema.isValidSync({
@@ -156,15 +158,15 @@ export default function WebsiteSignupForm() {
     const secondaryOk =
       showSecondaryContact && !secondaryEmpty
         ? contactValidationSchema.isValidSync(
-          connection.secondaryContactDetails,
-        )
+            connection.secondaryContactDetails,
+          )
         : true;
     const businessOk =
       customerType === "BUSINESS"
         ? businessDetailsValidationSchema.isValidSync({
-          business_name: connection.business_name,
-          abn_number: connection.abn_number,
-        })
+            business_name: connection.business_name,
+            abn_number: connection.abn_number,
+          })
         : true;
     return primaryOk && secondaryOk && businessOk;
   };
@@ -338,26 +340,41 @@ export default function WebsiteSignupForm() {
           postcode,
         })) ?? [];
 
-      const validPlans = plans.length > 0 ? plans : [
-        {
-          price_plan_code: "BASIC_001",
-          short_display_name: "Basic Plan",
-          rate_display: "20.54 c/kWh",
-          features: ["Fixed Rates", "No contract lock-in", "24/7 support"]
-        },
-        {
-          price_plan_code: "STD_001",
-          short_display_name: "Standard Plan",
-          rate_display: "24.60 c/kWh",
-          features: ["100% green energy", "Carbon neutral", "Support renewables"]
-        },
-        {
-          price_plan_code: "PREM_001",
-          short_display_name: "Premium Plan",
-          rate_display: "28.53 c/kWh",
-          features: ["Off-peak discounts", "Smart meter required", "Usage insights"]
-        }
-      ];
+      const validPlans =
+        plans.length > 0
+          ? plans
+          : [
+              {
+                price_plan_code: "BASIC_001",
+                short_display_name: "Basic Plan",
+                rate_display: "20.54 c/kWh",
+                features: [
+                  "Fixed Rates",
+                  "No contract lock-in",
+                  "24/7 support",
+                ],
+              },
+              {
+                price_plan_code: "STD_001",
+                short_display_name: "Standard Plan",
+                rate_display: "24.60 c/kWh",
+                features: [
+                  "100% green energy",
+                  "Carbon neutral",
+                  "Support renewables",
+                ],
+              },
+              {
+                price_plan_code: "PREM_001",
+                short_display_name: "Premium Plan",
+                rate_display: "28.53 c/kWh",
+                features: [
+                  "Off-peak discounts",
+                  "Smart meter required",
+                  "Usage insights",
+                ],
+              },
+            ];
 
       setEligiblePlans(validPlans);
       // Auto-select plan if previously selected is still valid, else null or maybe first
@@ -519,11 +536,11 @@ export default function WebsiteSignupForm() {
   //           subheading="Tell us a bit about your property so we can provide accurate estimates."
   //         />
   //         {/* This section replaces MoveIn/Concession/LifeSupport with the Figma layout */}
-  //         {/* I'll implement the new fields directly here or in a new component. For speed/cleanliness, I'll update MoveInForm or similar. 
-  //             But wait, I need to render the PropertyDetails form here. 
-  //             I will use a new component `PropertyDetailsForm` which I will create. 
+  //         {/* I'll implement the new fields directly here or in a new component. For speed/cleanliness, I'll update MoveInForm or similar.
+  //             But wait, I need to render the PropertyDetails form here.
+  //             I will use a new component `PropertyDetailsForm` which I will create.
   //             For now I will point to it. */}
-  //         <PropertyDetailsForm 
+  //         <PropertyDetailsForm
   //           connection={connection}
   //           handleChange={(updates) => setConnection(prev => ({ ...prev, ...updates }))}
   //         />
@@ -624,8 +641,8 @@ export default function WebsiteSignupForm() {
     <Grid
       container
       sx={{
-        height: { xs: "auto", md: "100vh" },
-        overflow: "hidden", // We likely want internal scroll for the panels
+        height: { xs: "auto", md: "75vh" },
+        overflow: "hidden",
       }}
     >
       {/* LEFT – Hero / Branding / Steps */}
@@ -681,11 +698,7 @@ export default function WebsiteSignupForm() {
 
           <Typography
             variant="body1"
-            sx={{
-              opacity: 0.9,
-              maxWidth: { xs: "420px", md: 280 },
-              fontSize: { xs: "1rem", md: "0.95rem" },
-            }}
+            sx={{ opacity: 0.9, maxWidth: { xs: "420px", md: 280 } }}
           >
             Start with your NMI or address and choose your plan. We’ll gather
             the details needed to create your account.
@@ -730,7 +743,6 @@ export default function WebsiteSignupForm() {
           ))}
         </Stack>
       </Grid>
-
       {/* RIGHT FORM PANEL */}
       <Grid
         item
@@ -739,8 +751,8 @@ export default function WebsiteSignupForm() {
         lg={8.5}
         sx={{
           backgroundColor: "#ffffff",
-          height: { xs: "auto", md: "100%" },
-          overflowY: activeStep === 1 ? "hidden" : "auto", // Remove scroll on plan page specifically
+          height: "100%",
+          overflow: activeStep === 1 ? "hidden" : "auto",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -749,7 +761,9 @@ export default function WebsiteSignupForm() {
         <Box
           sx={{
             width: "100%",
-            maxWidth: { md: 800, lg: 1000, xl: 1100 },
+            // maxWidth: { md: 900, lg: 1200, xl: 1300 },
+            maxWidth: 1100,
+            mx: "auto",
             p: { xs: 2, sm: 3, md: 4, lg: 5 },
             display: "flex",
             flexDirection: "column",
@@ -785,9 +799,16 @@ export default function WebsiteSignupForm() {
             )}
 
             {activeStep === 1 && (
-              <Stack spacing={2}>
+              <Box
+                sx={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 {plansLoading ? (
-                  <CircularProgress size={24} />
+                  <CircularProgress />
                 ) : (
                   <PlanForm
                     plan={connection.plan}
@@ -796,7 +817,7 @@ export default function WebsiteSignupForm() {
                     handlePlanChange={handlePlanChange}
                   />
                 )}
-              </Stack>
+              </Box>
             )}
 
             {activeStep === 2 && (
@@ -822,7 +843,6 @@ export default function WebsiteSignupForm() {
                     }))
                   }
                 />
-
 
                 {customerType === "BUSINESS" && (
                   <BusinessDetailsForm
@@ -893,12 +913,13 @@ export default function WebsiteSignupForm() {
               >
                 Complete Signup
               </LoadingButton>
-
             )}
           </Stack>
-        </Box> {/* End of max-width wrapper */}
-      </Grid> {/* End of RIGHT FORM PANEL */}
-    </Grid >
+        </Box>{" "}
+        {/* End of max-width wrapper */}
+      </Grid>{" "}
+      {/* End of RIGHT FORM PANEL */}
+    </Grid>
   );
 }
 
@@ -1002,10 +1023,10 @@ function buildPayload({ connection, consents, hasSecondaryContact }) {
   const lifeSupportDetails =
     `${connection.lifeSupportFlag}` === "true"
       ? {
-        machine_type: connection.lifeSupportMachineType,
-        machineType: connection.lifeSupportMachineType,
-        notes: connection.lifeSupportNotes,
-      }
+          machine_type: connection.lifeSupportMachineType,
+          machineType: connection.lifeSupportMachineType,
+          notes: connection.lifeSupportNotes,
+        }
       : null;
 
   const concessionDetails =
@@ -1016,9 +1037,9 @@ function buildPayload({ connection, consents, hasSecondaryContact }) {
   const businessDetails =
     connection.plan?.customer_type === "BUSINESS"
       ? {
-        business_name: connection.business_name || "",
-        abn_number: connection.abn_number || "",
-      }
+          business_name: connection.business_name || "",
+          abn_number: connection.abn_number || "",
+        }
       : null;
 
   return {
@@ -1076,11 +1097,11 @@ function buildPayload({ connection, consents, hasSecondaryContact }) {
       payment:
         connection.payment.method === "DIRECT"
           ? {
-            method_type: connection.payment.method_type,
-            dd_bsb: connection.payment.dd_bsb,
-            dd_acc_no: connection.payment.dd_acc_no,
-            dd_acc_name: connection.payment.dd_acc_name,
-          }
+              method_type: connection.payment.method_type,
+              dd_bsb: connection.payment.dd_bsb,
+              dd_acc_no: connection.payment.dd_acc_no,
+              dd_acc_name: connection.payment.dd_acc_name,
+            }
           : { method_type: connection.payment.method_type },
       terms_consent_bundle: consents.terms_consent_bundle,
       business: businessDetails,
