@@ -34,7 +34,7 @@ export default function SignupPage() {
         </Container>
       </Box>
 
-      <Container maxWidth="md" sx={{ py: { xs: 4, sm: 6 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 4, sm: 6 } }}>
         <WebsiteSignupForm />
       </Container>
     </PageLayout>

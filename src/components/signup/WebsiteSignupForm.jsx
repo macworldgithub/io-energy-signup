@@ -158,15 +158,15 @@ export default function WebsiteSignupForm() {
     const secondaryOk =
       showSecondaryContact && !secondaryEmpty
         ? contactValidationSchema.isValidSync(
-            connection.secondaryContactDetails,
-          )
+          connection.secondaryContactDetails,
+        )
         : true;
     const businessOk =
       customerType === "BUSINESS"
         ? businessDetailsValidationSchema.isValidSync({
-            business_name: connection.business_name,
-            abn_number: connection.abn_number,
-          })
+          business_name: connection.business_name,
+          abn_number: connection.abn_number,
+        })
         : true;
     return primaryOk && secondaryOk && businessOk;
   };
@@ -344,37 +344,37 @@ export default function WebsiteSignupForm() {
         plans.length > 0
           ? plans
           : [
-              {
-                price_plan_code: "BASIC_001",
-                short_display_name: "Basic Plan",
-                rate_display: "20.54 c/kWh",
-                features: [
-                  "Fixed Rates",
-                  "No contract lock-in",
-                  "24/7 support",
-                ],
-              },
-              {
-                price_plan_code: "STD_001",
-                short_display_name: "Standard Plan",
-                rate_display: "24.60 c/kWh",
-                features: [
-                  "100% green energy",
-                  "Carbon neutral",
-                  "Support renewables",
-                ],
-              },
-              {
-                price_plan_code: "PREM_001",
-                short_display_name: "Premium Plan",
-                rate_display: "28.53 c/kWh",
-                features: [
-                  "Off-peak discounts",
-                  "Smart meter required",
-                  "Usage insights",
-                ],
-              },
-            ];
+            {
+              price_plan_code: "BASIC_001",
+              short_display_name: "Basic Plan",
+              rate_display: "20.54 c/kWh",
+              features: [
+                "Fixed Rates",
+                "No contract lock-in",
+                "24/7 support",
+              ],
+            },
+            {
+              price_plan_code: "STD_001",
+              short_display_name: "Standard Plan",
+              rate_display: "24.60 c/kWh",
+              features: [
+                "100% green energy",
+                "Carbon neutral",
+                "Support renewables",
+              ],
+            },
+            {
+              price_plan_code: "PREM_001",
+              short_display_name: "Premium Plan",
+              rate_display: "28.53 c/kWh",
+              features: [
+                "Off-peak discounts",
+                "Smart meter required",
+                "Usage insights",
+              ],
+            },
+          ];
 
       setEligiblePlans(validPlans);
       // Auto-select plan if previously selected is still valid, else null or maybe first
@@ -641,8 +641,10 @@ export default function WebsiteSignupForm() {
     <Grid
       container
       sx={{
-        height: { xs: "auto", md: "75vh" },
+        height: { xs: "auto", md: "850px", lg: "900px" },
+        borderRadius: 2,
         overflow: "hidden",
+        boxShadow: "0 24px 48px rgba(0,0,0,0.08)",
       }}
     >
       {/* LEFT – Hero / Branding / Steps */}
@@ -661,7 +663,7 @@ export default function WebsiteSignupForm() {
           flexDirection: "column",
           justifyContent: { xs: "flex-start", md: "space-between" },
           height: { xs: "auto", md: "100%" },
-          minHeight: { xs: "250px", md: "auto" },
+          minHeight: { xs: "280px", md: "auto" },
           overflowY: "auto",
         }}
       >
@@ -752,7 +754,7 @@ export default function WebsiteSignupForm() {
         sx={{
           backgroundColor: "#ffffff",
           height: "100%",
-          overflow: activeStep === 1 ? "hidden" : "auto",
+          overflow: "auto",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -761,8 +763,7 @@ export default function WebsiteSignupForm() {
         <Box
           sx={{
             width: "100%",
-            // maxWidth: { md: 900, lg: 1200, xl: 1300 },
-            maxWidth: 1100,
+            maxWidth: 1400,
             mx: "auto",
             p: { xs: 2, sm: 3, md: 4, lg: 5 },
             display: "flex",
@@ -1023,10 +1024,10 @@ function buildPayload({ connection, consents, hasSecondaryContact }) {
   const lifeSupportDetails =
     `${connection.lifeSupportFlag}` === "true"
       ? {
-          machine_type: connection.lifeSupportMachineType,
-          machineType: connection.lifeSupportMachineType,
-          notes: connection.lifeSupportNotes,
-        }
+        machine_type: connection.lifeSupportMachineType,
+        machineType: connection.lifeSupportMachineType,
+        notes: connection.lifeSupportNotes,
+      }
       : null;
 
   const concessionDetails =
@@ -1037,9 +1038,9 @@ function buildPayload({ connection, consents, hasSecondaryContact }) {
   const businessDetails =
     connection.plan?.customer_type === "BUSINESS"
       ? {
-          business_name: connection.business_name || "",
-          abn_number: connection.abn_number || "",
-        }
+        business_name: connection.business_name || "",
+        abn_number: connection.abn_number || "",
+      }
       : null;
 
   return {
@@ -1097,11 +1098,11 @@ function buildPayload({ connection, consents, hasSecondaryContact }) {
       payment:
         connection.payment.method === "DIRECT"
           ? {
-              method_type: connection.payment.method_type,
-              dd_bsb: connection.payment.dd_bsb,
-              dd_acc_no: connection.payment.dd_acc_no,
-              dd_acc_name: connection.payment.dd_acc_name,
-            }
+            method_type: connection.payment.method_type,
+            dd_bsb: connection.payment.dd_bsb,
+            dd_acc_no: connection.payment.dd_acc_no,
+            dd_acc_name: connection.payment.dd_acc_name,
+          }
           : { method_type: connection.payment.method_type },
       terms_consent_bundle: consents.terms_consent_bundle,
       business: businessDetails,

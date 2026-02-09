@@ -273,7 +273,7 @@ export default function PlanForm({
   return (
     <Stack spacing={5} alignItems="center">
       {/* HEADER */}
-      <Box textAlign="center" maxWidth={900}>
+      <Box textAlign="center" maxWidth={1000}>
         <Typography variant="h4" fontWeight={800} mb={1}>
           Choose your plan
         </Typography>
@@ -286,14 +286,15 @@ export default function PlanForm({
       {/* PLAN CARDS */}
       <Stack
         direction="row"
-        spacing={1}
+        spacing={3}
         justifyContent="center"
         alignItems="stretch"
         sx={{
           width: "100%",
-          maxWidth: 700,
+          maxWidth: 1000,
           mx: "auto",
-          flexWrap: "nowrap",
+          flexWrap: "wrap",
+          rowGap: 3,
         }}
       >
         {eligiblePlans.map((p) => {
@@ -305,7 +306,8 @@ export default function PlanForm({
               key={p.price_plan_code}
               onClick={() => !disabled && handlePlanChange(p)}
               sx={{
-                width: 300,
+                // width: { xs: "100%", sm: "calc(50% - 24px)", md: 340 },
+                flexShrink: 0,
                 borderRadius: 4,
                 border: isSelected ? "2px solid #ff2d55" : "1px solid #e5e7eb",
                 boxShadow: isSelected
